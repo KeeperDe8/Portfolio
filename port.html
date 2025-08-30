@@ -10,133 +10,13 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <!-- AOS CSS -->
     <link href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css" rel="stylesheet">
-    <style>
-        html, body {
-            width: 100%;
-            height: 100%;
-        }
-
-        body {
-            background: linear-gradient(-45deg, #000000, #391350); /* Black and Purple Gradient */
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
-            font-family: 'Roboto', sans-serif;
-            color: #ffffff;
-        }
-
-        @keyframes gradient {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        .navbar-dark .navbar-brand {
-            font-size: 1.5rem;
-            font-weight: bold;
-            color: #a020f0; /* Purple */
-        }
-
-        .navbar-dark .nav-link {
-            color: #ffffff;
-            transition: color 0.3s;
-        }
-
-        .navbar-dark .nav-link:hover {
-            color: #a020f0; /* Purple on hover */
-        }
-
-        .navbar-dark .nav-link.active {
-            color: #a020f0; /* Purple for the active link */
-            text-decoration: underline;
-        }
-
-        .hero {
-            padding: 100px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .hero-text {
-            max-width: 60%;
-        }
-
-        .hero-text h1 {
-            font-size: 4rem; /* Increased text size */
-            font-weight: bold;
-            color: #a020f0; /* Purple color */
-        }
-
-        .hero-text p {
-            font-size: 1.5rem; /* Increased text size */
-            color: #bbbbbb;
-        }
-
-        .profile-img {
-            width: 300px; /* Increased profile picture size */
-            height: 300px; /* Increased profile picture size */
-            border-radius: 50%;
-            border: 5px solid #a020f0; /* Purple border */
-            background-color: #ffffff;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            margin-right: 80px; /* Moves the PFP slightly away from the right side */
-        }
-
-        .social-icons {
-            margin-top: 20px;
-        }
-
-        .social-icons a {
-            color: #a020f0; /* Purple color */
-            margin: 0 10px;
-            font-size: 1.5rem;
-            transition: color 0.3s;
-        }
-
-        .social-icons a:hover {
-            color: #9b30ff; /* Lighter purple on hover */
-        }
-
-        .btn-primary {
-            background-color: #a020f0; /* Purple button */
-            border: none;
-            color: #ffffff;
-            font-weight: bold;
-            padding: 10px 20px;
-            border-radius: 30px;
-            transition: background-color 0.3s;
-        }
-
-        .btn-primary:hover {
-            background-color: #9b30ff; /* Lighter purple on hover */
-        }
-
-        .section-title {
-            color: #a020f0; /* Purple for section titles */
-            font-size: 2rem;
-            font-weight: bold;
-        }
-
-        .card-title {
-            color: #a020f0; /* Purple for project titles */
-        }
-
-        .footer {
-            background-color: #1f1f1f;
-            color: #a020f0; /* Purple for footer text */
-            text-align: center;
-            padding: 20px;
-        }
-    </style>
+    <!-- Project styles -->
+    <link href="css/styles.css" rel="stylesheet">
 </head>
 
 <body>
+    <!-- Animated triangles background layer -->
+    <div class="tri-wrap" id="triWrap" aria-hidden="true"></div>
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
@@ -163,15 +43,17 @@
     <!-- Hero Section -->
     <header class="hero">
         <div class="hero-text" data-aos="fade-right">
-            <h1>Hello, I'm Mike Roan M. Baral</h1>
-            <p>Part of SACE at NU Lipa, 2nd Year Collage</p>
+            <h1>Hello, I'm Mike Roan</h1>
+            <p>Part of SACE at NU Lipa, 3rd Year Collage</p>
             <div class="social-icons">
                 <a href="https://www.facebook.com/mike.roan.967" target="_blank"><i class="fab fa-facebook"></i></a>
                 <a href="https://www.instagram.com/roaanm4/?hl=en" target="_blank"><i class="fab fa-instagram"></i></a>
                 <a href="https://github.com/KeeperDe8" target="_blank"><i class="fab fa-github"></i></a>
             </div>
         </div>
-        <img src="profile.png" alt="Profile" class="profile-img" data-aos="fade-left">
+    <div class="profile-wrapper">
+            <img src="profile.png" alt="Profile" class="profile-img">
+        </div>
     </header>
 
     <!-- About Section -->
@@ -258,6 +140,157 @@
     <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
     <script>
         AOS.init();
+
+        (function() {
+            // Triangles background generator (placed behind content)
+            (function initTriangles() {
+                const wrap = document.getElementById('triWrap');
+                if (!wrap) return;
+                // Clear any existing children (hot-reload safe)
+                while (wrap.firstChild) wrap.removeChild(wrap.firstChild);
+                const w = window.innerWidth;
+                const count = w < 576 ? 60 : (w < 992 ? 90 : 140);
+                const rand = (min, max) => Math.random() * (max - min) + min;
+                const palette = ['var(--c1)', 'var(--c2)', 'var(--c3)', 'var(--c4)'];
+                for (let i = 0; i < count; i++) {
+                    const tri = document.createElement('div');
+                    tri.className = 'tri';
+                    tri.style.setProperty('--size', `${rand(12, 42).toFixed(1)}px`);
+                    tri.style.setProperty('--color', palette[Math.floor(Math.random() * palette.length)]);
+                    tri.style.setProperty('--x0', `${rand(-10, 110).toFixed(2)}vw`);
+                    tri.style.setProperty('--y0', `${rand(-20, 120).toFixed(2)}vh`);
+                    tri.style.setProperty('--z0', `${rand(-1500, -400).toFixed(0)}px`);
+                    tri.style.setProperty('--x1', `${rand(-10, 110).toFixed(2)}vw`);
+                    tri.style.setProperty('--y1', `${rand(-20, 120).toFixed(2)}vh`);
+                    tri.style.setProperty('--z1', `${rand(200, 1200).toFixed(0)}px`);
+                    tri.style.setProperty('--rot', `${rand(-180, 180).toFixed(1)}deg`);
+                    tri.style.setProperty('--spin', `${rand(0.5, 2.0).toFixed(2)}turn`);
+                    tri.style.setProperty('--time', `${rand(9, 18).toFixed(1)}s`);
+                    tri.style.setProperty('--delay', `${rand(-10, 0).toFixed(2)}s`);
+                    wrap.appendChild(tri);
+                }
+                // Rebuild on resize (debounced)
+                let t;
+                window.addEventListener('resize', () => {
+                    clearTimeout(t);
+                    t = setTimeout(initTriangles, 250);
+                }, { passive: true });
+            })();
+
+            // Simple color extraction using a canvas to theme the site based on profile image
+            const img = document.querySelector('.profile-img');
+            if (img) {
+                const applyThemeFromImage = () => {
+                    try {
+                        const c = document.createElement('canvas');
+                        const ctx = c.getContext('2d');
+                        c.width = Math.min(200, img.naturalWidth || 200);
+                        c.height = Math.min(200, img.naturalHeight || 200);
+                        ctx.drawImage(img, 0, 0, c.width, c.height);
+                        const data = ctx.getImageData(0, 0, c.width, c.height).data;
+                        let r = 0, g = 0, b = 0, count = 0;
+                        // Also track brightest and darkest samples to build a small palette
+                        let minL = 999, maxL = -1;
+                        let min = [0,0,0], max = [255,255,255];
+                        for (let i = 0; i < data.length; i += 40) { // sample sparsely for perf
+                            const rr = data[i], gg = data[i+1], bb = data[i+2], aa = data[i+3];
+                            if (aa < 128) continue; // skip transparent
+                            r += rr; g += gg; b += bb; count++;
+                            const L = 0.2126*rr + 0.7152*gg + 0.0722*bb;
+                            if (L < minL) { minL = L; min = [rr,gg,bb]; }
+                            if (L > maxL) { maxL = L; max = [rr,gg,bb]; }
+                        }
+                        if (count > 0) {
+                            r = Math.round(r / count); g = Math.round(g / count); b = Math.round(b / count);
+                            const accent = `rgb(${r}, ${g}, ${b})`;
+                            const accent2 = `rgba(${Math.max(r-30,0)}, ${Math.max(g-30,0)}, ${Math.max(b-30,0)}, 1)`;
+                            // Build a 4-color palette from avg, bright, dark, and a mixed tone
+                            const c1 = `rgb(${r}, ${g}, ${b})`;
+                            const c2 = `rgb(${max[0]}, ${max[1]}, ${max[2]})`;
+                            const c3 = `rgb(${Math.floor((r+max[0])/2)}, ${Math.floor((g+max[1])/2)}, ${Math.floor((b+max[2])/2)})`;
+                            const c4 = `rgb(${min[0]}, ${min[1]}, ${min[2]})`;
+                            // Gradient bases start darker from the palette
+                            const bg1 = `rgba(${Math.floor(r*0.15)}, ${Math.floor(g*0.15)}, ${Math.floor(b*0.2)}, 1)`;
+                            const bg2 = `rgba(${Math.floor(r*0.35)}, ${Math.floor(g*0.25)}, ${Math.floor(b*0.55)}, 1)`;
+                            document.documentElement.style.setProperty('--accent', accent);
+                            document.documentElement.style.setProperty('--accent-2', accent2);
+                            document.documentElement.style.setProperty('--bg1', bg1);
+                            document.documentElement.style.setProperty('--bg2', bg2);
+                            document.documentElement.style.setProperty('--bg3', c3);
+                            document.documentElement.style.setProperty('--bg4', c4);
+                            // Set rotating palette colors
+                            document.documentElement.style.setProperty('--c1', c1);
+                            document.documentElement.style.setProperty('--c2', c2);
+                            document.documentElement.style.setProperty('--c3', c3);
+                            document.documentElement.style.setProperty('--c4', c4);
+                            // Keep text readable based on luminance
+                            const lum = (0.2126*r + 0.7152*g + 0.0722*b) / 255;
+                            const text = lum > 0.6 ? '#111' : '#fff';
+                            const muted = lum > 0.6 ? '#333' : '#bbbbbb';
+                            document.documentElement.style.setProperty('--text', text);
+                            document.documentElement.style.setProperty('--muted', muted);
+                        }
+                    } catch (e) {
+                        // ignore theming on errors (e.g., CORS on remote images)
+                    }
+                };
+                if (img.complete) applyThemeFromImage(); else img.addEventListener('load', applyThemeFromImage);
+            }
+
+            const hero = document.querySelector('.hero');
+            const wrapper = document.querySelector('.profile-wrapper');
+            if (!hero || !wrapper) return;
+
+            // Intro pop when page loads and hero is visible
+            const popIntro = () => {
+                wrapper.classList.add('visible', 'pop-intro');
+                setTimeout(() => wrapper.classList.remove('pop-intro'), 500);
+            };
+
+            let heroInView = false;
+            const io = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    heroInView = entry.isIntersecting;
+                    if (!heroInView) {
+                        wrapper.classList.add('hidden');
+                        wrapper.classList.remove('visible');
+                    } else {
+                        wrapper.classList.add('visible');
+                        wrapper.classList.remove('hidden');
+                    }
+                });
+            }, { threshold: 0 });
+
+            io.observe(hero);
+
+            // initial state
+            const rect = hero.getBoundingClientRect();
+            heroInView = rect.bottom > 0 && rect.top < window.innerHeight;
+            if (heroInView) {
+                popIntro();
+            } else {
+                wrapper.classList.add('hidden');
+            }
+
+            // Directional slide on scroll while hero is visible
+            let lastY = window.scrollY;
+            window.addEventListener('scroll', () => {
+                const y = window.scrollY;
+                const down = y > lastY + 2;
+                const up = y < lastY - 2;
+                lastY = y;
+                if (!heroInView) return;
+                if (down) {
+                    wrapper.classList.add('hidden');
+                    wrapper.classList.remove('visible');
+                } else if (up) {
+                    wrapper.classList.add('visible');
+                    wrapper.classList.remove('hidden');
+                    wrapper.classList.add('pop-intro');
+                    setTimeout(() => wrapper.classList.remove('pop-intro'), 420);
+                }
+            }, { passive: true });
+        })();
     </script>
 </body>
 </html>

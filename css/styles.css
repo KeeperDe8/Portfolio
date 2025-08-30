@@ -1,0 +1,301 @@
+html, body {
+    width: 100%;
+    height: 100%;
+}
+
+/* Infinite scrolling background pattern on black */
+body {
+    background-color: #000000;
+    /* Removed tiled background animation */
+    font-family: 'Roboto', sans-serif;
+    color: var(--text, #ffffff);
+}
+
+/* Triangles background behind everything */
+.tri-wrap {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0; /* keep behind nav/hero/profile */
+    perspective: 800px;
+}
+
+.tri {
+    position: absolute;
+    top: 0; left: 0;
+    width: 0; height: 0;
+    border-left: var(--size, 24px) solid transparent;
+    border-right: var(--size, 24px) solid transparent;
+    border-bottom: calc(var(--size, 24px) * 1.15) solid var(--color, rgba(160,32,240,0.35));
+    opacity: 0.0;
+    transform: translate3d(var(--x0, 0), var(--y0, 0), var(--z0, -1000px)) rotate(var(--rot, 0deg)) scale(0.9);
+    animation: triFloat var(--time, 12s) linear infinite;
+    animation-delay: var(--delay, 0s);
+    filter: grayscale(0.85) contrast(0.9) brightness(1.1);
+}
+
+@keyframes triFloat {
+    0% {
+        opacity: 0;
+        transform: translate3d(var(--x0), var(--y0), var(--z0)) rotate(var(--rot)) scale(0.5);
+    }
+    10% { opacity: 0.5; }
+    20% { opacity: 0.9; }
+    60% { opacity: 0.9; }
+    100% {
+        opacity: 0;
+        transform: translate3d(var(--x1), var(--y1), var(--z1)) rotate(calc(var(--rot) + var(--spin, 1turn))) scale(1.2);
+    }
+}
+
+@keyframes gradient {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Scrolling tiled background animation */
+@keyframes bg-scrolling-reverse { 100% { background-position: 50px 50px; } }
+@keyframes bg-scrolling { 0% { background-position: 50px 50px; } }
+
+.navbar-dark .navbar-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--accent, #a020f0);
+}
+
+.navbar-dark .nav-link {
+    color: #ffffff;
+    transition: color 0.3s;
+}
+
+.navbar-dark .nav-link:hover {
+    color: var(--accent, #a020f0);
+}
+
+.navbar-dark .nav-link.active {
+    color: var(--accent, #a020f0);
+    text-decoration: underline;
+}
+
+.hero {
+    padding: 60px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: transparent; /* remove glass-like card */
+    border-radius: 0;
+    margin: 36px 40px;
+    box-shadow: none;
+    min-height: 90vh; /* push the next section below the fold */
+}
+
+.hero-text {
+    max-width: 58%;
+}
+
+.hero-text h1 {
+    font-size: 4rem; /* Increased text size */
+    font-weight: bold;
+    color: var(--accent, #a020f0); /* Themed color */
+}
+
+.hero-text p {
+    font-size: 1.5rem; /* Increased text size */
+    color: var(--muted, #bbbbbb);
+}
+
+/* Profile wrapper now shows the full PNG (no circular crop). */
+.profile-wrapper {
+    width: 600px; /* larger */
+    height: 600px;
+    border-radius: 0; /* no rounded panel */
+    overflow: hidden; /* crop bottom slightly */
+    border: none; /* no border */
+    background: transparent; /* no glass tint */
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    box-shadow: none; /* remove shadow */
+    margin-right: 0; /* not needed for fixed positioning */
+    display: flex;
+    align-items: flex-start; /* align image to the top */
+    justify-content: flex-end; /* align image toward the right edge */
+    transform: translateZ(0);
+    /* Stick to viewport bottom-right */
+    position: fixed;
+    right: 0;
+    bottom: 0; /* sit on the bottom edge */
+    z-index: 30;
+    transition: opacity 300ms ease, transform 300ms ease;
+    opacity: 1;
+}
+
+/* (wrapper is fixed at bottom-right while hero is in view) */
+
+/* visibility helpers - toggled by JS */
+.profile-wrapper.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+.profile-wrapper.visible {
+    opacity: 1;
+}
+
+/* pop-in intro animation */
+@keyframes popIntro {
+    0%   { opacity: 0; transform: translateX(20px) translateY(10px) scale(0.9); }
+    60%  { opacity: 1; transform: translateX(0) translateY(0) scale(1.05); }
+    100% { opacity: 1; transform: translateX(0) translateY(0) scale(1); }
+}
+
+.profile-wrapper.pop-intro {
+    animation: popIntro 420ms cubic-bezier(.2,.9,.2,1.02) 0s 1 both;
+}
+
+/* Keep the image at full height and preserve aspect ratio so the character portrait shows correctly. */
+.profile-wrapper .profile-img {
+    width: 115%; /* wider so we can nudge right without gaps */
+    height: 120%; /* a bit taller so bottom gets cropped */
+    display: block;
+    object-fit: cover;
+    object-position: top right; /* keep top visible, crop bottom */
+    max-width: none;
+    transform: translateX(24px);
+}
+
+
+/* animations removed; image is static */
+
+/* Responsive: shrink the profile and stack content on smaller screens */
+@media (max-width: 992px) {
+    .hero {
+        flex-direction: column;
+        padding: 40px 24px;
+        gap: 22px;
+    }
+
+    .hero-text {
+        max-width: 100%;
+        text-align: center;
+    }
+
+    .profile-wrapper {
+        width: 420px;
+        height: 420px;
+        margin-right: 0;
+    right: 4px;
+    bottom: 0;
+    }
+    .profile-wrapper .profile-img {
+    width: 110%;
+    height: 115%;
+    transform: translateX(14px);
+    }
+}
+
+@media (max-width: 576px) {
+    .profile-wrapper {
+        width: 300px;
+        height: 300px;
+    right: 2px;
+    bottom: 0;
+    }
+    .profile-wrapper .profile-img {
+        width: 108%;
+        height: 112%;
+    transform: translateX(10px);
+    }
+
+    .hero-text h1 {
+        font-size: 2rem;
+    }
+
+    .hero-text p {
+        font-size: 1rem;
+    }
+}
+
+.social-icons {
+    margin-top: 20px;
+}
+
+.social-icons a {
+    color: var(--accent, #a020f0);
+    margin: 0 10px;
+    font-size: 1.5rem;
+    transition: color 0.3s;
+}
+
+.social-icons a:hover {
+    color: var(--accent-2, #9b30ff);
+}
+
+.btn-primary {
+    background-color: var(--accent, #a020f0);
+    border: none;
+    color: var(--text, #ffffff);
+    font-weight: bold;
+    padding: 10px 20px;
+    border-radius: 30px;
+    transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-2, #9b30ff);
+}
+
+.section-title {
+    color: var(--accent, #a020f0); /* Themed for section titles */
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.card-title {
+    color: var(--accent, #a020f0);
+}
+
+.footer {
+    background-color: #1f1f1f;
+    color: var(--accent, #a020f0);
+    text-align: center;
+    padding: 20px;
+}
+
+/* Theme variables (defaults). JS can override these to match the profile image */
+:root {
+    --accent: #a020f0;   /* primary brand color */
+    --accent-2: #9b30ff; /* hover/secondary */
+    --bg1: #000000;      /* gradient start */
+    --bg2: #391350;      /* gradient end */
+    --bg3: #24103a;      /* gradient mid 1 */
+    --bg4: #0b0714;      /* gradient mid 2 */
+    --text: #ffffff;     /* main text */
+    --muted: #bbbbbb;    /* muted text */
+    /* palette targets for animation; JS will set these to match the image */
+    --c1: var(--accent);
+    --c2: var(--accent-2);
+    --c3: #391350;
+    --c4: #000000;
+}
+
+/* Register animatable color custom properties so they interpolate smoothly */
+@property --bg1 { syntax: '<color>'; inherits: false; initial-value: #000000; }
+@property --bg2 { syntax: '<color>'; inherits: false; initial-value: #391350; }
+@property --bg3 { syntax: '<color>'; inherits: false; initial-value: #24103a; }
+@property --bg4 { syntax: '<color>'; inherits: false; initial-value: #0b0714; }
+
+/* Animate color variants by rotating through the image-driven palette */
+@keyframes gradientColors {
+    0%   { --bg1: var(--c1); --bg2: var(--c2); --bg3: var(--c3); --bg4: var(--c4); }
+    33%  { --bg1: var(--c2); --bg2: var(--c3); --bg3: var(--c4); --bg4: var(--c1); }
+    66%  { --bg1: var(--c3); --bg2: var(--c4); --bg3: var(--c1); --bg4: var(--c2); }
+    100% { --bg1: var(--c1); --bg2: var(--c2); --bg3: var(--c3); --bg4: var(--c4); }
+}
